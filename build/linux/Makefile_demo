@@ -1,0 +1,31 @@
+include config.mk
+
+ROOTSRC_DEMO=../../demo
+INCPATH_DEMO=../../inc
+
+CFLAGS_DEMO := -fPIC -g -Wreturn-type
+CFLAGS_DEMO += $(EXTRA_CFLAGS) -I$(INCPATH_DEMO)
+LDFLAGS_DEMO := -fPIC -lm -ldl -lpthread 
+LDFLAGS_DEMO += $(EXTRA_LDFLAGS)
+
+LIBPATH:=$(BIN_DIR)
+LIB = $(LIBPATH)/$(LIBNAME).a
+
+TARGET=$(LIBPATH)/RC_DEMO
+
+DEMOOBJS := $(ROOTSRC_DEMO)/demo.c    
+
+
+all : $(TARGET)  
+$(TARGET) : $(DEMOOBJS)  
+	$(CC) $< $(CFLAGS_DEMO) -o $@ -L. $(LIB) -lm
+
+%.o : %.c
+	$(CC) $(CFLAGS_DEMO) -c $< -o $@ 
+
+%.o : %.asm
+	$(ASM) $(ASMFLAGS) $< -o $@ 	
+
+clean:  
+	@rm -f $(DEMOOBJS) 
+	@rm -f $(TARGET)  
